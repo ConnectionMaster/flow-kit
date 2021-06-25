@@ -9,10 +9,9 @@ import android.text.TextUtils;
 import androidx.viewpager.widget.ViewPager;
 
 import com.zeoflow.flow.kit.R;
-import com.zeoflow.compat.ActivityCore;
+import com.zeoflow.app.Activity;
 import com.zeoflow.crash.reporter.CrashReporter;
 import com.zeoflow.crash.reporter.adapter.MainPagerAdapter;
-import com.zeoflow.crash.reporter.utils.Constants;
 import com.zeoflow.crash.reporter.utils.CrashUtil;
 import com.zeoflow.crash.reporter.utils.FileUtils;
 import com.zeoflow.crash.reporter.utils.SimplePageChangeListener;
@@ -20,9 +19,9 @@ import com.zeoflow.material.elements.tabs.TabLayout;
 
 import java.io.File;
 
-import static com.zeoflow.crash.reporter.utils.Constants.CRASH_REPORTER_NOTIFICATION_ID;
+import static com.zeoflow.crash.reporter.utils.Constants.*;
 
-public class CrashReporterActivity extends ActivityCore
+public class CrashReporterActivity extends Activity
 {
 
     private MainPagerAdapter mainPagerAdapter;
@@ -35,7 +34,7 @@ public class CrashReporterActivity extends ActivityCore
         setContentView(R.layout.zf_cr_crash_reporter_activity);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(CRASH_REPORTER_NOTIFICATION_ID);
+        notificationManager.cancel(8102020);
 
         ViewPager viewPager = findViewById(R.id.viewpager);
         if (viewPager != null)
@@ -82,7 +81,7 @@ public class CrashReporterActivity extends ActivityCore
         });
 
         Intent intent = getIntent();
-        if (intent != null && !intent.getBooleanExtra(Constants.LANDING, false))
+        if (intent != null && !intent.getBooleanExtra("landing", false))
         {
             selectedTabPosition = 0;
         }

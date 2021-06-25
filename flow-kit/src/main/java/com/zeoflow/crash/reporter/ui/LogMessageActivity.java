@@ -8,13 +8,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.zeoflow.compat.ActivityCore;
-import com.zeoflow.compat.EntityCore;
+import com.zeoflow.app.Activity;
 import com.zeoflow.flow.kit.R;
 import com.zeoflow.annotation.NonNull;
-import com.zeoflow.annotation.NotNull;
 import com.zeoflow.crash.reporter.utils.AppUtils;
 import com.zeoflow.crash.reporter.utils.FileUtils;
 import com.zeoflow.stylar.AbstractStylarPlugin;
@@ -24,9 +20,9 @@ import com.zeoflow.stylar.view.StylarView;
 
 import java.io.File;
 
-import static com.zeoflow.crash.reporter.utils.Constants.CRASH_REPORTER_NOTIFICATION_ID;
+import static com.zeoflow.crash.reporter.utils.Constants.*;
 
-public class LogMessageActivity extends ActivityCore
+public class LogMessageActivity extends Activity
 {
 
     private StylarView zsvAppInfo;
@@ -39,7 +35,7 @@ public class LogMessageActivity extends ActivityCore
         zsvAppInfo = findViewById(R.id.zsvAppInfo);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancel(CRASH_REPORTER_NOTIFICATION_ID);
+        notificationManager.cancel(8102020);
 
         if (getStringExtra("LogMessage") != null)
         {
@@ -95,7 +91,7 @@ public class LogMessageActivity extends ActivityCore
             .usePlugin(new AbstractStylarPlugin()
             {
                 @Override
-                public void configureTheme(@NotNull @NonNull StylarTheme.Builder builder)
+                public void configureTheme(@NonNull StylarTheme.Builder builder)
                 {
                     builder
                         .codeTextColor(Color.parseColor("#CE570CC1"))

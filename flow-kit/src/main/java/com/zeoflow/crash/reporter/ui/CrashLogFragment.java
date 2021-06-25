@@ -12,10 +12,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.zeoflow.flow.kit.R;
-import com.zeoflow.compat.FragmentCore;
+import com.zeoflow.app.Fragment;
 import com.zeoflow.crash.reporter.CrashReporter;
 import com.zeoflow.crash.reporter.adapter.CrashLogAdapter;
-import com.zeoflow.crash.reporter.utils.Constants;
 import com.zeoflow.crash.reporter.utils.CrashUtil;
 
 import java.io.File;
@@ -23,8 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Objects;
 
-public class CrashLogFragment extends FragmentCore
+import static com.zeoflow.crash.reporter.utils.Constants.EXCEPTION_SUFFIX;
+
+public class CrashLogFragment extends Fragment
 {
 
     private CrashLogAdapter logAdapter;
@@ -70,7 +72,6 @@ public class CrashLogFragment extends FragmentCore
         }
     }
 
-
     private ArrayList<File> getAllCrashes()
     {
         String directoryPath;
@@ -88,10 +89,10 @@ public class CrashLogFragment extends FragmentCore
         {
             throw new RuntimeException("The path provided doesn't exists : " + directoryPath);
         }
-        ArrayList<File> listOfFiles = new ArrayList<>(Arrays.asList(directory.listFiles()));
+        ArrayList<File> listOfFiles = new ArrayList<>(Arrays.asList(Objects.requireNonNull(directory.listFiles())));
         for (Iterator<File> iterator = listOfFiles.iterator(); iterator.hasNext(); )
         {
-            if (iterator.next().getName().contains(Constants.EXCEPTION_SUFFIX))
+            if (iterator.next().getName().contains("_exception"))
             {
                 iterator.remove();
             }

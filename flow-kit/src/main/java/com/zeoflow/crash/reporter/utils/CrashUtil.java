@@ -12,7 +12,7 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import com.zeoflow.compat.EntityCore;
+import com.zeoflow.app.Entity;
 import com.zeoflow.crash.reporter.CrashReporter;
 import com.zeoflow.crash.reporter.service.NotificationService;
 import com.zeoflow.crash.reporter.ui.CrashReporterActivity;
@@ -31,12 +31,11 @@ import java.util.Locale;
 import java.util.Objects;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static com.zeoflow.crash.reporter.utils.Constants.ACTION_CR_ZF_DELETE;
-import static com.zeoflow.crash.reporter.utils.Constants.ACTION_CR_ZF_SHARE;
-import static com.zeoflow.crash.reporter.utils.Constants.CHANNEL_NOTIFICATION_ID;
+import static com.zeoflow.crash.reporter.utils.Constants.*;
 import static com.zeoflow.initializer.ZeoFlowApp.getContext;
 
-public class CrashUtil extends EntityCore
+@SuppressWarnings({"unused", "RedundantSuppression"})
+public class CrashUtil extends Entity
 {
 
     private static final String TAG = CrashUtil.class.getSimpleName();
@@ -48,13 +47,13 @@ public class CrashUtil extends EntityCore
 
     private static String getCrashLogTime()
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyyHHmmss", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.getDefault());
         return dateFormat.format(new Date());
     }
 
     private static String getFileName()
     {
-        return Constants.CRASH_PREFIX + getCrashLogTime() + Constants.FILE_EXTENSION;
+        return "crash_" + getCrashLogTime() + ".txt";
     }
 
     public static void saveCrashReport(final Throwable throwable)
@@ -123,13 +122,13 @@ public class CrashUtil extends EntityCore
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(NOTIFICATION_SERVICE);
             createNotificationChannel(notificationManager);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_NOTIFICATION_ID);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "zf_cr_crash_reporter_notify");
             builder.setSmallIcon(R.drawable.zf_cr_ic_crash_notification);
             builder.setAutoCancel(true);
             builder.setColor(ContextCompat.getColor(context, R.color.zf_cr_colorAccent_CrashReporter));
 
             Intent intent = CrashReporter.getLaunchIntent();
-            intent.putExtra(Constants.LANDING, isCrash);
+            intent.putExtra("landing", isCrash);
             intent.setAction(Long.toString(System.currentTimeMillis()));
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
             builder.setContentIntent(pendingIntent);
@@ -159,7 +158,7 @@ public class CrashUtil extends EntityCore
 
                 Intent deleteAction = new Intent(context, NotificationService.class);
                 deleteAction.putExtra("LogMessage", filePath);
-                deleteAction.setAction(ACTION_CR_ZF_DELETE);
+                deleteAction.setAction("DELETE_ACTION_CR_ZF");
                 PendingIntent deleteActionPending = PendingIntent.getService(context, 0, deleteAction, 0);
 
                 Intent shareAction = new Intent(context, LogMessageActivity.class);
@@ -171,7 +170,7 @@ public class CrashUtil extends EntityCore
                 builder.addAction(R.drawable.zf_cr_ic_warning_black_24dp, "Share", shareActionPending);
             }
 
-            notificationManager.notify(Constants.CRASH_REPORTER_NOTIFICATION_ID, builder.build());
+            notificationManager.notify(8102020, builder.build());
         }
     }
 
@@ -181,7 +180,7 @@ public class CrashUtil extends EntityCore
         {
             String title = "Crash Reporter";
             String description = "When a crash occurs or an exception, a notification will be pushed.";
-            NotificationChannel channel = new NotificationChannel(CHANNEL_NOTIFICATION_ID, title, NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("zf_cr_crash_reporter_notify", title, NotificationManager.IMPORTANCE_DEFAULT);
             channel.setDescription(description);
             notificationManager.createNotificationChannel(channel);
         }
@@ -200,7 +199,7 @@ public class CrashUtil extends EntityCore
     public static String getDefaultPath()
     {
         String defaultPath = Objects.requireNonNull(getContext().getExternalFilesDir(null)).getAbsolutePath()
-            + File.separator + Constants.CRASH_REPORT_DIR;
+            + File.separator + "Crash Reports";
 
         File file = new File(defaultPath);
         boolean isDirectoryCreated = file.mkdirs();
